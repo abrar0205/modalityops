@@ -1,0 +1,54 @@
+name: Validate
+on:
+  push:
+    branches: [main, 'feat/**']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-dev.lock
+      - run: python -m pip install -r requirements-dev.lock
+      - run: python -m pip install --no-deps -e .
+      - run: ruff check src tests scripts
+      - run: pytest --cov=modalityops --cov-fail-under=85 --cov-report=term-missing
+      - run: python scripts/export_demo.py
+      - run: python scripts/benchmark.py
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: web/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+        working-directory: web
+      - run: pnpm test && pnpm typecheck && pnpm build:static
+        working-directory: web
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t modalityops:test .
+      - run: |
+          docker run -d --name modalityops-test -p 127.0.0.1:8000:8000 modalityops:test
+          for attempt in $(seq 1 20); do
+            if curl --fail http://127.0.0.1:8000/api/v1/health; then exit 0; fi
+            sleep 2
+          done
+          docker logs modalityops-test
+          exit 1
