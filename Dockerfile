@@ -2,7 +2,7 @@ FROM node:22-bookworm-slim AS web
 WORKDIR /build/web
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN corepack enable
-COPY web/package.json web/pnpm-lock.yaml ./
+COPY web/package.json web/pnpm-lock.yaml web/pnpm-workspace.yaml web/.npmrc ./
 RUN corepack install && pnpm install --frozen-lockfile
 COPY web/ ./
 RUN pnpm build:static
