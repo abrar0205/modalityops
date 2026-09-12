@@ -1,0 +1,7 @@
+{
+  "id": "csv-fixture",
+  "title": "CSV timestamp-gap example",
+  "source": "synthetic",
+  "reference_clock": "fixture-reference",
+  "streams": [{"id": "eeg", "modality": "eeg", "clock": "sensor", "sample_rate": 100, "unit": "uV", "path": "eeg.csv"}]
+}

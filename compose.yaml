@@ -1,0 +1,20 @@
+services:
+  workbench:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - modalityops-runs:/var/lib/modalityops
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    init: true
+    restart: unless-stopped
+    mem_limit: 1g
+    cpus: 2
+volumes:
+  modalityops-runs:
