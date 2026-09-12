@@ -4,6 +4,8 @@
 
 Find recording gaps, inspect signal quality, estimate clock offset and drift, and export reproducible corrections—without changing your raw data.
 
+[**Open the live demo →**](https://abrar0205.github.io/modalityops/)
+
 [Quick start](#quick-start) · [Methods](docs/methods.md) · [Import your recordings](docs/data-contract.md) · [Architecture](docs/architecture.md) · [Security](SECURITY.md)
 
 ## Why this exists
@@ -116,14 +118,14 @@ The repository includes CI for Python tests, generated media adapters, frontend 
 
 ```mermaid
 flowchart TD
-    A[Local recordings or synthetic fixtures] --> B[Validated session contract]
-    B --> C[Modality quality checks]
-    B --> D[Shared-event clock estimation]
-    C --> E[Versioned evidence report]
+    A["Local recordings or synthetic fixtures"] --> B["Validated session contract"]
+    B --> C["Modality quality checks"]
+    B --> D["Shared event clock estimation"]
+    C --> E["Versioned evidence report"]
     D --> E
-    E --> F[CLI and local API]
-    F --> G[Interactive workbench]
-    E --> H[Non-destructive correction manifest]
+    E --> F["CLI and local API"]
+    F --> G["Interactive workbench"]
+    E --> H["Correction manifest"]
 ```
 
 ## Deliberate boundaries
